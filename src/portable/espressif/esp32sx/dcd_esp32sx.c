@@ -31,7 +31,13 @@
 #if (((CFG_TUSB_MCU == OPT_MCU_ESP32S2) ||  (CFG_TUSB_MCU == OPT_MCU_ESP32S3)) && CFG_TUD_ENABLED)
 
 // Espressif
-#include "freertos/xtensa_api.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
+#if ESP_IDF_VERSION >= ESP_IDF_VERSION_VAL(5, 2, 0)
+#include "xtensa_api.h"
+#include "soc/usb_struct.h"
+#include "soc/usb_reg.h"
+#endif
 #include "esp_intr_alloc.h"
 #include "esp_log.h"
 #include "soc/dport_reg.h"
@@ -40,6 +46,9 @@
 #include "soc/periph_defs.h" // for interrupt source
 
 #include "device/dcd.h"
+
+#define USB_IN_EP_NUM 7
+#define USB_OUT_EP_NUM 7
 
 // Max number of bi-directional endpoints including EP0
 // Note: ESP32S2 specs say there are only up to 5 IN active endpoints include EP0
