@@ -33,31 +33,13 @@
  extern "C" {
 #endif
 
-typedef struct {
-  pipe_handle_t pipe_in;
-  pipe_handle_t pipe_out;
-}custom_interface_info_t;
-
-//--------------------------------------------------------------------+
-// USBH-CLASS DRIVER API
-//--------------------------------------------------------------------+
-static inline bool tusbh_custom_is_mounted(uint8_t dev_addr, uint16_t vendor_id, uint16_t product_id)
-{
-  (void) vendor_id; // TODO check this later
-  (void) product_id;
-//  return (tusbh_device_get_mounted_class_flag(dev_addr) & TU_BIT(TUSB_CLASS_MAPPED_INDEX_END-1) ) != 0;
-  return false;
-}
-
-bool tusbh_custom_read(uint8_t dev_addr, uint16_t vendor_id, uint16_t product_id, void * p_buffer, uint16_t length);
-bool tusbh_custom_write(uint8_t dev_addr, uint16_t vendor_id, uint16_t product_id, void const * p_data, uint16_t length);
-
 //--------------------------------------------------------------------+
 // Internal Class Driver API
 //--------------------------------------------------------------------+
 void cush_init(void);
-bool cush_open_subtask(uint8_t dev_addr, tusb_desc_interface_t const *p_interface_desc, uint16_t *p_length);
-void cush_isr(pipe_handle_t pipe_hdl, xfer_result_t event);
+bool cush_open(uint8_t rhport, uint8_t dev_addr, tusb_desc_interface_t const * itf_desc, uint16_t max_len);
+bool cush_set_config(uint8_t dev_addr, uint8_t itf_num);
+bool cush_xfer_cb(uint8_t dev_addr, uint8_t ep_addr, xfer_result_t result, uint32_t xferred_bytes);
 void cush_close(uint8_t dev_addr);
 
 #ifdef __cplusplus

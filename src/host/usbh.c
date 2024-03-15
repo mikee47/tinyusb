@@ -173,8 +173,9 @@ static usbh_class_driver_t const usbh_class_drivers[] = {
     {
       DRIVER_NAME("VENDOR")
       .init       = cush_init,
-      .open       = cush_open_subtask,
-      .xfer_cb    = cush_isr,
+      .open       = cush_open,
+      .set_config = cush_set_config,
+      .xfer_cb    = cush_xfer_cb,
       .close      = cush_close
     }
     #endif
@@ -294,7 +295,7 @@ bool tuh_vid_pid_get(uint8_t dev_addr, uint16_t *vid, uint16_t *pid) {
   *vid = dev->vid;
   *pid = dev->pid;
 
-  return true;
+  return dev->configured;
 }
 
 tusb_speed_t tuh_speed_get(uint8_t dev_addr) {
