@@ -199,18 +199,6 @@ static usbh_class_driver_t const usbh_class_drivers[] = {
       .close      = hub_close
   },
   #endif
-
-  #if CFG_TUH_VENDOR
-  {
-    .name       = DRIVER_NAME("VENDOR"),
-    .init       = cush_init,
-    .deinit     = cush_deinit,
-    .open       = cush_open,
-    .set_config = cush_set_config,
-    .xfer_cb    = cush_isr,
-    .close      = cush_close
-  }
-  #endif
 };
 
 enum { BUILTIN_DRIVER_COUNT = TU_ARRAY_SIZE(usbh_class_drivers) };
