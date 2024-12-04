@@ -44,6 +44,9 @@
 
 #pragma GCC diagnostic pop
 
+void dcd_int_handler(uint8_t);
+void hcd_int_handler(uint8_t, bool);
+
 #if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
 #define DWC2_FS_REG_BASE   0x60080000UL
 #define DWC2_EP_MAX        7
