@@ -437,16 +437,24 @@ bool dcd_init(uint8_t rhport, const tusb_rhport_init_t* rh_init) {
   gahbcfg |= GAHBCFG_GINT; // Enable global interrupt
   dwc2->gahbcfg = gahbcfg;
 
+  dwc2_int_alloc(rhport, TUSB_ROLE_DEVICE);
+
   dcd_connect(rhport);
   return true;
 }
 
+bool dcd_deinit(uint8_t rhport)
+{
+  dwc2_int_free(rhport);
+  return true;
+}
+
 void dcd_int_enable(uint8_t rhport) {
-  dwc2_dcd_int_enable(rhport);
+  dwc2_int_set(rhport, TUSB_ROLE_DEVICE, true);
 }
 
 void dcd_int_disable(uint8_t rhport) {
-  dwc2_dcd_int_disable(rhport);
+  dwc2_int_set(rhport, TUSB_ROLE_DEVICE, false);
 }
 
 void dcd_set_address(uint8_t rhport, uint8_t dev_addr) {

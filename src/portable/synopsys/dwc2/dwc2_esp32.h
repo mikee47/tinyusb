@@ -88,17 +88,23 @@ static void dwc2_int_handler_wrap(void* arg) {
 #endif
 }
 
-TU_ATTR_ALWAYS_INLINE static inline void dwc2_int_set(uint8_t rhport, tusb_role_t role, bool enabled) {
-  if (enabled) {
+static inline void dwc2_int_alloc(uint8_t rhport, tusb_role_t role) {
     esp_intr_alloc(_dwc2_controller[rhport].irqnum, ESP_INTR_FLAG_LOWMED,
-                   dwc2_int_handler_wrap, (void*)(uintptr_t)tu_u16(role, rhport), &usb_ih[rhport]);
-  } else {
-    esp_intr_free(usb_ih[rhport]);
-  }
+                    dwc2_int_handler_wrap, (void*)(uintptr_t)tu_u16(role, rhport), &usb_ih[rhport]);
 }
 
-#define dwc2_dcd_int_enable(_rhport)  dwc2_int_set(_rhport, TUSB_ROLE_DEVICE, true)
-#define dwc2_dcd_int_disable(_rhport) dwc2_int_set(_rhport, TUSB_ROLE_DEVICE, false)
+static inline void dwc2_int_free(uint8_t rhport) {
+    esp_intr_free(usb_ih[rhport]);
+    usb_ih[rhport] = NULL;
+}
+
+TU_ATTR_ALWAYS_INLINE static inline void dwc2_int_set(uint8_t rhport, tusb_role_t, bool enabled) {
+  if (enabled) {
+      esp_intr_enable(usb_ih[rhport]);
+  } else {
+      esp_intr_disable(usb_ih[rhport]);
+  }
+}
 
 TU_ATTR_ALWAYS_INLINE static inline void dwc2_remote_wakeup_delay(void) {
   vTaskDelay(pdMS_TO_TICKS(1));
