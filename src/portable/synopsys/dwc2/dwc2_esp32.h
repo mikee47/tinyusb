@@ -32,12 +32,17 @@
  extern "C" {
 #endif
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
+
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 #include "esp_intr_alloc.h"
 #include "soc/periph_defs.h"
 #include "soc/usb_wrap_struct.h"
+
+#pragma GCC diagnostic pop
 
 #if TU_CHECK_MCU(OPT_MCU_ESP32S2, OPT_MCU_ESP32S3)
 #define DWC2_FS_REG_BASE   0x60080000UL
